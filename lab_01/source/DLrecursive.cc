@@ -11,9 +11,17 @@ int DLrecursive::find(std::string s1, std::string s2)
                 find(s1, s2.substr(0, s2.size() - 1)) + 1
             ),
             std::min(
-                find(s1.substr(0, s1.size() - 1), s2.substr(0, s2.size() - 1)) + (s1[s1.size() - 1] == s2[s2.size() - 1] ? 0 : 1),
-                (s1.size() > 1 && s2.size() > 1 && s1[s1.size() - 2] == s2[s2.size() - 1] && s1[s1.size() - 1] == s2[s2.size() - 2] ?
-                 find(s1.substr(0, s1.size() - 2), s2.substr(0, s2.size() - 2)) : int(std::max(s1.size(), s2.size()))) + 1
+                find(s1.substr(0, s1.size() - 1), 
+                     s2.substr(0, s2.size() - 1)) + 
+                (s1[s1.size() - 1] == s2[s2.size() - 1] ? 0 : 1),
+
+                (s1.size() > 1 && 
+                 s2.size() > 1 && 
+                 s1[s1.size() - 2] == s2[s2.size() - 1] && 
+                 s1[s1.size() - 1] == s2[s2.size() - 2] ?
+                 find(s1.substr(0, s1.size() - 2), 
+                      s2.substr(0, s2.size() - 2)) : 
+                    int(std::max(s1.size(), s2.size()))) + 1
             )
         );
 }
