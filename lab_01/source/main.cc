@@ -1,43 +1,40 @@
 #include <iostream>
+#include <chrono>
 
 #include "Lmatrix.h"
 #include "DLmatrix.h"
 #include "DLrecursive.h"
 #include "CoutVector.h"
 
-int main()
+using namespace std::chrono;
+
+int main(int argc, char* argv[])
 {
-    std::cout << "Lmatrix:" << std::endl;
-    std::cout << "aaa -> aa" << std::endl << Lmatrix::find("aaa", "aa") << std::endl;
-    std::cout << "skat -> kot" << std::endl << Lmatrix::find("skat", "kot") << std::endl;
-    std::cout << "Hello -> Hello" << std::endl << Lmatrix::find("Hello", "Hello") << std::endl;
-    std::cout << "Abc -> aBC" << std::endl << Lmatrix::find("Abc", "aBC") << std::endl;
-    std::cout << "dagestan -> arestant" << std::endl << Lmatrix::find("dagestan", "arestant") << std::endl;
-    std::cout << "ab -> ba" << std::endl << Lmatrix::find("ab", "ba") << std::endl;
-    std::cout << "abcdefgh -> badcfehg" << std::endl << Lmatrix::find("abcdefgh", "badcfehg") << std::endl;
-    std::cout << "qwerty -> qwrety" << std::endl << Lmatrix::find("qwerty", "qwrety") << std::endl;
-    std::cout << std::endl;
+    if (argc != 3) return -1;
 
-    std::cout << "DLmatrix:" << std::endl;
-    std::cout << "aaa -> aa" << std::endl << DLmatrix::find("aaa", "aa") << std::endl;
-    std::cout << "skat -> kot" << std::endl << DLmatrix::find("skat", "kot") << std::endl;
-    std::cout << "Hello -> Hello" << std::endl << DLmatrix::find("Hello", "Hello") << std::endl;
-    std::cout << "Abc -> aBC" << std::endl << DLmatrix::find("Abc", "aBC") << std::endl;
-    std::cout << "dagestan -> arestant" << std::endl << DLmatrix::find("dagestan", "arestant") << std::endl;
-    std::cout << "ab -> ba" << std::endl << DLmatrix::find("ab", "ba") << std::endl;
-    std::cout << "abcdefgh -> badcfehg" << std::endl << DLmatrix::find("abcdefgh", "badcfehg") << std::endl;
-    std::cout << "qwerty -> qwrety" << std::endl << DLmatrix::find("qwerty", "qwrety") << std::endl;
-    std::cout << std::endl;
+    std::string s1 = argv[1], s2 = argv[2];
+    std::cout << s1 << " -> " << s2 << std::endl;
+    std::cout << s1.size() << ' ' << s2.size() << std::endl;
 
-    std::cout << "DLrecursive:" << std::endl;
-    std::cout << "aaa -> aa" << std::endl << DLrecursive::find("aaa", "aa") << std::endl;
-    std::cout << "skat -> kot" << std::endl << DLrecursive::find("skat", "kot") << std::endl;
-    std::cout << "Hello -> Hello" << std::endl << DLrecursive::find("Hello", "Hello") << std::endl;
-    std::cout << "Abc -> aBC" << std::endl << DLrecursive::find("Abc", "aBC") << std::endl;
-    std::cout << "dagestan -> arestant" << std::endl << DLrecursive::find("dagestan", "arestant") << std::endl;
-    std::cout << "ab -> ba" << std::endl << DLrecursive::find("ab", "ba") << std::endl;
-    std::cout << "abcdefgh -> badcfehg" << std::endl << DLrecursive::find("abcdefgh", "badcfehg") << std::endl;
-    std::cout << "qwerty -> qwrety" << std::endl << DLrecursive::find("qwerty", "qwrety") << std::endl;
-    std::cout << std::endl;
+    high_resolution_clock::time_point t1, t2;
+
+    t1 = high_resolution_clock::now();
+    auto res1 = Lmatrix::find(s1, s2);
+    t2 = high_resolution_clock::now();
+    std::cout << res1;
+    std::cout << "time: " << duration_cast<microseconds>(t2 - t1).count() << std::endl;// << std::endl;
+
+    t1 = high_resolution_clock::now();
+    auto res2 = DLmatrix::find(s1, s2);
+    t2 = high_resolution_clock::now();
+    std::cout << res2;
+    std::cout << "time: " << duration_cast<microseconds>(t2 - t1).count() << std::endl;// << std::endl;
+
+    t1 = high_resolution_clock::now();
+    auto res3 = DLrecursive::find(s1, s2);
+    t2 = high_resolution_clock::now();
+    std::cout << res3 << std::endl;
+    std::cout << "time: " << duration_cast<microseconds>(t2 - t1).count() << std::endl;// << std::endl;
+
     return 0;
 }
