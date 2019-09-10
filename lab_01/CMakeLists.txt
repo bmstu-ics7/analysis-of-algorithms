@@ -12,6 +12,7 @@ set(HEADERS
     include/Lmatrix.h
     include/DLmatrix.h
     include/DLrecursive.h
+    include/CoutVector.h
 )
 
 set(SOURCE 
@@ -19,6 +20,7 @@ set(SOURCE
     source/Lmatrix.cc
     source/DLmatrix.cc
     source/DLrecursive.cc
+    source/CoutVector.cc
 )
 
 add_executable(lab_01

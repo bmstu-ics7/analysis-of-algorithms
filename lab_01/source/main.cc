@@ -3,6 +3,7 @@
 #include "Lmatrix.h"
 #include "DLmatrix.h"
 #include "DLrecursive.h"
+#include "CoutVector.h"
 
 int main()
 {
