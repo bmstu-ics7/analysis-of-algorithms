@@ -1,6 +1,6 @@
 #include "DLmatrix.h"
 
-int DLmatrix::find(std::string s1, std::string s2)
+std::vector< std::vector< int > > DLmatrix::find(std::string s1, std::string s2)
 {
     std::vector< std::vector< int > > matrix;
     for (int i = 0; i < s1.size() + 1; ++i) {
@@ -33,12 +33,5 @@ int DLmatrix::find(std::string s1, std::string s2)
         }
     }
 
-    for (auto line : matrix) {
-        for (int el : line) {
-            std::cout << el << '\t';
-        }
-        std::cout << std::endl;
-    }
-
-    return matrix[matrix.size() - 1][matrix[0].size() - 1];
+    return matrix;
 }

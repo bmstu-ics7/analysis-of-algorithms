@@ -5,5 +5,5 @@
 class DLmatrix
 {
 public:
-    static int find(std::string s1, std::string s2);
+    static std::vector< std::vector< int > > find(std::string s1, std::string s2);
 };
