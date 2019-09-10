@@ -1,2 +1,7 @@
 .DS_Store
 **/build/**
+
+*.aux
+*.log
+*.pdf
+*.toc
