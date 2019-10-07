@@ -13,6 +13,7 @@ bool comp(int a, int b) { return a > b; }
 
 int main(int argc, char* argv[])
 {
+    /*
     if (argc != 2) return -1;
     int count = std::atoi(argv[1]);
 
@@ -48,6 +49,84 @@ int main(int argc, char* argv[])
     t2 = high_resolution_clock::now();
     std::cout << arr3 << std::endl;
     std::cout << "time: " << duration_cast<microseconds>(t2 - t1).count() << std::endl << std::endl;
+    */
+
+    srand(time(NULL));
+
+    high_resolution_clock::time_point t1, t2;
+
+    {
+        std::vector< int > arr;
+        int sum = 0;
+
+        for (int i = 100; i <= 10000; i += 100) {
+            for (int j = 0; j < 100; ++j) {
+                arr.push_back(10000 - (i - 100 + j));
+            }
+
+            for (int j = 0; j < 20; ++j) {
+                std::vector< int > a = arr;
+                t1 = high_resolution_clock::now();
+                BubbleSort< int >::sort(a, comp);
+                t2 = high_resolution_clock::now();
+                sum += duration_cast<microseconds>(t2 - t1).count();
+            }
+
+            std::cout << "(" << i << ", " << sum / 20 << ")" << std::endl;
+        }
+
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl << std::endl;
+
+    {
+        std::vector< int > arr;
+        int sum = 0;
+
+        for (int i = 100; i <= 10000; i += 100) {
+            for (int j = 0; j < 20; ++j) {
+                arr.push_back(10000 - (i - 100 + j));
+            }
+
+            for (int j = 0; j < 100; ++j) {
+                std::vector< int > a = arr;
+                t1 = high_resolution_clock::now();
+                ShakerSort< int >::sort(a, comp);
+                t2 = high_resolution_clock::now();
+                sum += duration_cast<microseconds>(t2 - t1).count();
+            }
+
+            std::cout << "(" << i << ", " << sum / 20 << ")" << std::endl;
+        }
+
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl << std::endl;
+
+    {
+        std::vector< int > arr;
+        int sum = 0;
+
+        for (int i = 100; i <= 10000; i += 100) {
+            for (int j = 0; j < 100; ++j) {
+                arr.push_back(10000 - (i - 100 + j));
+            }
+
+            for (int j = 0; j < 100; ++j) {
+                std::vector< int > a = arr;
+                t1 = high_resolution_clock::now();
+                QSort< int >::sort(a, comp);
+                t2 = high_resolution_clock::now();
+                sum += duration_cast<microseconds>(t2 - t1).count();
+            }
+
+            std::cout << "(" << i << ", " << sum / 100 << ")" << std::endl;
+        }
+
+        std::cout << std::endl;
+    }
 
     return 0;
 }
