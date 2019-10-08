@@ -1,8 +1,8 @@
 #include "Lmatrix.h"
 
-std::vector< std::vector< int > > Lmatrix::find(std::string s1, std::string s2)
+Matrix Lmatrix::find(std::string s1, std::string s2)
 {
-    std::vector< std::vector< int > > matrix;
+    Matrix matrix;
     for (int i = 0; i < s1.size() + 1; ++i) {
         matrix.push_back(std::vector< int >(s2.size() + 1));
     }
