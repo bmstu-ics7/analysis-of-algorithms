@@ -26,7 +26,7 @@ Matrix DLmatrix::find(std::string s1, std::string s2)
             if (i > 1 && j > 1) lluu = matrix[i - 2][j - 2];
 
             if (s1[i - 1] != s2[j - 1]) lu++;
-            if (lluu != -1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) lluu++;
+            if (i > 1 && j > 1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) lluu++;
             else lluu = inf;
 
             matrix[i][j] = std::min(std::min(u, l), std::min(lu, lluu));
