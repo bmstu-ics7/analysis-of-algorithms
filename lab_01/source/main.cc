@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     std::cout << res2;
     std::cout << "time: " << duration_cast<microseconds>(t2 - t1).count() << std::endl << std::endl;
 
-    std::cout << "\e[1mРекурсивный алгоримт Дамерау-Левенштейна:\e[0m" << std::endl;
+    std::cout << "\e[1mРекурсивный алгоритм Дамерау-Левенштейна:\e[0m" << std::endl;
     t1 = high_resolution_clock::now();
     auto res3 = DLrecursive::find(s1, s2);
     t2 = high_resolution_clock::now();
