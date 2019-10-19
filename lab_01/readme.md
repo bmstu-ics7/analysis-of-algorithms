@@ -18,6 +18,6 @@ $ ./lab_01 <str1> <str2>
 
 ![Пример2](img/good_space.png)
 
-![Пример3](img/zaro_arg.png)
+![Пример3](img/zero_arg.png)
 
 ![Пример4](img/one_arg.png)

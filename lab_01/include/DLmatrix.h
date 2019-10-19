@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include "Matrix.h"
 
 class DLmatrix
 {
 public:
-    static std::vector< std::vector< int > > find(std::string s1, std::string s2);
+    static Matrix find(std::string s1, std::string s2);
 };

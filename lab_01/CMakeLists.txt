@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-set(CMAKE_CXX_STANDART 17)
-set(CMAKE_CXX_STANDART_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "-std=c++17")
 
 project(lab_01)
 
 set(HEADERS
+    include/Matrix.h
     include/Lmatrix.h
     include/DLmatrix.h
     include/DLrecursive.h

@@ -1,8 +1,8 @@
 #include "DLmatrix.h"
 
-std::vector< std::vector< int > > DLmatrix::find(std::string s1, std::string s2)
+Matrix DLmatrix::find(std::string s1, std::string s2)
 {
-    std::vector< std::vector< int > > matrix;
+    Matrix matrix;
     for (int i = 0; i < s1.size() + 1; ++i) {
         matrix.push_back(std::vector< int >(s2.size() + 1));
     }
@@ -26,7 +26,7 @@ std::vector< std::vector< int > > DLmatrix::find(std::string s1, std::string s2)
             if (i > 1 && j > 1) lluu = matrix[i - 2][j - 2];
 
             if (s1[i - 1] != s2[j - 1]) lu++;
-            if (lluu != -1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) lluu++;
+            if (i > 1 && j > 1 && s1[i - 1] == s2[j - 2] && s1[i - 2] == s2[j - 1]) lluu++;
             else lluu = inf;
 
             matrix[i][j] = std::min(std::min(u, l), std::min(lu, lluu));
