@@ -8,6 +8,7 @@
 \usepackage{MnSymbol}
 \usepackage{wasysym}
 \usepackage{indentfirst}
+\usepackage[unicode, pdftex]{hyperref}
 
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.9}
@@ -102,7 +103,7 @@
 
 \subsection{Описание задачи}
 
-
+\textbf{Сортировка пузырьком} является одной самых простых сортировок.
 
 \subsection{Пути решения}
 
@@ -113,11 +114,15 @@
 \newpage
 \section{Конструкторская часть}
 
-\subsection{IDEF0}
+\subsection{Функциональная модель}
 
-\begin{center}
-    \includegraphics[scale=0.5]{IDEF0}
-\end{center}
+На рисунке \ref{img:IDEF0} представлена IDEF0.
+
+\begin{figure}[h!]
+    \center{\includegraphics[scale=0.5]{IDEF0}}
+    \caption{IDEF0}
+    \label{img:IDEF0}
+\end{figure}
 
 \subsection{Схемы алгоритмов}
 
