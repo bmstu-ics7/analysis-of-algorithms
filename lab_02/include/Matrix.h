@@ -1,3 +1,6 @@
+#ifndef __MATRIX_H
+#define __MATRIX_H
+
 #include <vector>
 #include <iostream>
 
@@ -10,3 +13,5 @@ std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
 typedef std::vector< int > Array;
 
 Array CreateArray(size_t n);
+
+#endif // __MATRIX_H
