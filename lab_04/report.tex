@@ -152,20 +152,19 @@
 
 Таким образом, из существования произведения $A \times B$ вовсе не следует
 существование произведения $B \times A$ \cite{litr}.
-\subsection{Пути решения}
 
 Помимо обычного перемножения матриц по формуле существуют модификации, работающие
 быстрее. Рассмотрим в данной лабораторной работе алгоритм Винограда, являющийся одним
 из самых эффективных по времени алгоритмов умножения матриц \cite{haskell},
 и ее оптимизацию. Этот алгоритм основывается на подготовке вычислений перед вычислением
 результирующей матрицы. Если разложить формулу \ref{res} на суммы, то получается
-результат, видимый на формуле \ref{vinres}.
+результат, видимый в формуле \ref{vinres}.
 
 \begin{equation}\label{vinres}
     c_{ij} =
-    \sum_{k=1}^{\frac{n}{2}} (a_{i,2k} + b_{2k+1,j}) \cdot (a_{i,2k+1} + b_{2k,j}) -
-    \underbrace{\sum_{k=1}^{\frac{n}{2}} a_{i,2k} \cdot a_{i,2k+1} -
-    \sum_{k=1}^{\frac{n}{2}} b_{2k,j} \cdot b_{2k+1,j}}_\text{Можно вычислить заранее}
+    \sum_{k=1}^{\frac{n}{2}} (a_{i,2k-1} + b_{2k,j}) \cdot (a_{i,2k} + b_{2k-1,j}) -
+    \underbrace{\sum_{k=1}^{\frac{n}{2}} a_{i,2k-1} \cdot a_{i,2k} -
+    \sum_{k=1}^{\frac{n}{2}} b_{2k-1,j} \cdot b_{2k,j}}_\text{Можно вычислить заранее}
 \end{equation}
 
 Таким образом, можно заранее вычислить две последние суммы, поскольку они вычисляются
@@ -188,11 +187,11 @@
 
 \subsection{Функциональная модель}
 
-На рисунке \ref{img:idef0} представлена IDEF0.
+На рисунке \ref{img:idef0} представлена функциональная модель IDEF0 уровня 1.
 
 \begin{figure}[H]
     \center{\includegraphics[scale=0.8]{IDEF0}}
-    \caption{IDEF0}
+    \caption{Функциональная модель IDEF0 уровня 1}
     \label{img:idef0}
 \end{figure}
 
@@ -253,11 +252,13 @@
 использована библиотека с классом нативных потоков
 {\ttfamily std::thread} \cite{thread}.
 
+Тестирование проводится на процессоре с количеством логических потоков равным 4.
+
 \subsection{Листинг кода}
 
-Результаты разработки указаны на листингах \ref{list:vin}, \ref{list:vinth}.
+Результаты разработки указаны в листингах \ref{list:vin}, \ref{list:vinth}.
 
-\begin{lstlisting}[caption=Алгоритм Винограда умножения матриц,label=vin]
+\begin{lstlisting}[caption=Алгоритм Винограда умножения матриц,label=list:vin]
 Matrix ModifiedVinogradMultiplication::multiplication(
     const Matrix& first,
     const Matrix& second)
@@ -304,7 +305,7 @@ Matrix ModifiedVinogradMultiplication::multiplication(
 }
 \end{lstlisting}
 
-\begin{lstlisting}[caption=Алгоритм Винограда умножения матриц,label=vinth]
+\begin{lstlisting}[caption=Алгоритм Винограда умножения матриц,label=list:vinth]
 void ThreadMultiplication::multiplication(
     const Matrix& first, const Matrix& second,
     Matrix& result,
@@ -348,7 +349,7 @@ void ThreadMultiplication::multiplication(
 
 \subsection{Тестирование}
 
-Для тестирования программы были заготовлены следующие тесты на таблице
+Для тестирования программы были заготовлены следующие тесты в таблице
 \ref{table:test}.
 
 \begin{table}[H]
@@ -418,8 +419,8 @@ void ThreadMultiplication::multiplication(
 
 \subsection{Результаты тестирования}
 
-Для тестирования были использованы тесты из таблицы \ref{table:test}.
-Результаты продемонстрированы на таблицах \ref{table:test-res} и \ref{table:test-res-th}.
+Для тестирования были использованы тесты в таблице \ref{table:test}.
+Результаты продемонстрированы в таблицах \ref{table:test-res} и \ref{table:test-res-th}.
 
 \begin{table}[H]
     \caption{Результаты однопоточного алгоритма}
@@ -478,7 +479,7 @@ void ThreadMultiplication::multiplication(
         \begin{axis}[
             legend pos = north west,
             xlabel=Размерность матрицы,
-            ylabel=Милисекунды,
+            ylabel=микросекунды,
             grid = major,
             width = 0.8\paperwidth,
             height = 0.38\paperheight,
@@ -566,7 +567,7 @@ void ThreadMultiplication::multiplication(
         \begin{axis}[
             legend pos = north west,
             xlabel=Размерность матрицы,
-            ylabel=Милисекунды,
+            ylabel=микросекунды,
             grid = major,
             width = 0.8\paperwidth,
             height = 0.38\paperheight,
@@ -674,7 +675,7 @@ void ThreadMultiplication::multiplication(
 Все цели, поставленные на эту работы, были выполнены:
 
 \begin{enumerate}
-    \item изучение распараллеливания вычислений и работа с потоками;
+    \item изучено распараллеливания вычислений и работа с потоками;
     \item реализация распараллеленных вычислений;
     \item экспериментальное сравнение работы алгоритма на разном количестве потоков.
 \end{enumerate}
