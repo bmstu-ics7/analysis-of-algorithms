@@ -9,15 +9,16 @@ $ mkdir build
 $ cd build
 $ cmake -S .. -B .
 $ make
-$ ./lab_03 <n1> <n2>
+$ ./lab_03 <n>
 ```
 
 ### Примеры работы
 
-![Пример1](img/normal.png)
+![Пример1](img/zero.png)
 
-![Пример2](img/zero.png)
+![Пример2](img/zero_arg.png)
 
-![Пример3](img/zero_arg.png)
+![Пример3](img/less_zero.png)
 
-![Пример4](img/less_zero.png)
+![Пример4](img/normal.png)
+
