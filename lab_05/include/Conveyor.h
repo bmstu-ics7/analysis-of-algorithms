@@ -3,6 +3,8 @@
 #include <thread>
 #include "Multiplication.h"
 
+using namespace std::chrono;
+
 typedef std::queue< Multiplication > queue;
 
 class Conveyor
@@ -24,9 +26,15 @@ private:
     static queue queuePipeline3;
     static queue queuePipeline4;
 
-    static bool stopPipline1;
-    static bool stopPipline2;
-    static bool stopPipline3;
+    static bool stopPipeline1;
+    static bool stopPipeline2;
+    static bool stopPipeline3;
 
     static std::queue< Multiplication > queueResult;
+
+public:
+    static unsigned int timePipeline1;
+    static unsigned int timePipeline2;
+    static unsigned int timePipeline3;
+    static unsigned int timePipeline4;
 };
