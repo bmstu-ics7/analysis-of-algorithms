@@ -16,22 +16,22 @@ int BoilerMyr::find(const std::string& str, const std::string& substr)
     }
 
     int i = int(substr.size()) - 1;
-    int j = i;
-    int k = i;
+    int sub = i;
+    int txt = i;
 
-    while (j > 0 && i < int(str.size())) {
-        j = int(substr.size()) - 1;
-        k = i;
+    while (sub > 0 && i < int(str.size())) {
+        sub = int(substr.size()) - 1;
+        txt = i;
 
-        while (j >= 0 && str[k] == substr[j]) {
-            --k;
-            --j;
+        while (sub >= 0 && str[txt] == substr[sub]) {
+            --sub;
+            --txt;
         }
 
         i += offset[int(str[i])];
     }
 
-    if (k > int(str.size()) - int(substr.size())) return -1;
+    if (txt > int(str.size()) - int(substr.size())) return -1;
 
-    return k + 1;
+    return txt + 1;
 }
