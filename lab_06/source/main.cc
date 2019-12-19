@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     std::cout << "dist = " << result.second << std::endl << std::endl;
 
     // alpha, beta, rho, tmax
-    result = AntSearch::way(matrix, 0.2, 0.2, 0.8, 200);
+    result = AntSearch::way(matrix, 0.4, 0.6, 0.5, 1200);
 
     std::cout << BOLD_ON << "Муравьиный алгоритм:" << BOLD_OFF << std::endl;
     for (int i = 0; i < result.first.size(); ++i)
