@@ -2,6 +2,7 @@
 
 int KnuthMorrisPratt::find(const std::string& str, const std::string& substr)
 {
+    if (str.size() == 0 || substr.size() == 0) return -1;
     if (substr.size() > str.size()) return -1;
 
     std::vector< int > fail = makeFail(substr);
