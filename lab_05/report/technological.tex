@@ -1,0 +1,292 @@
+\newpage
+\section{Технологическая часть}
+
+Необходимо изучить и реализовать онвеерную разработку для умножения матриц.
+
+\subsection{Требования к программному обеспечению}
+
+Программное обеспечение должно обеспечивать замер процессорного времени выполнения
+каждого алгоритма. Проводятся замеры для случайно генерируемых квадратных матриц
+размерности до 1000.
+
+\subsection{Средства реализации}
+
+В качестве языка программирования был выбран {\ttfamily C++}.
+Данный язык имеет высокую скорость и богатую стандартную библиотеку,
+содержащую необходимые контейнеры для данной работы. Программа, написанная на
+{\ttfamily C++}, будет доступна на всех платформах.
+
+Время замерялось с помощью библиотеки {\ttfamily chrono}, которая измеряет
+процессорное время \cite{chrono}. Для распараллеливания вычислений была
+использована библиотека с классом нативных потоков
+{\ttfamily std::thread} \cite{thread}.
+
+Тестирование проводится на 2,7 GHz 2‑ядерном процессоре Intel Core i5 с количеством логических потоков равным 4.
+
+\subsection{Листинг кода}
+
+На листингах \ref{lst:inputMatrix1}, \ref{lst:inputMatrix2} предствавлен код для
+выделения памяти и ввода двух матриц.
+
+\begin{lstlisting}[caption=Ввод первой матрицы,label=lst:inputMatrix1]
+void Multiplication::inputMatrix1(std::ifstream& input)
+{
+    input >> n1 >> m1;
+
+    for (int i = 0; i < n1; ++i) {
+        Array line;
+
+        for (int j = 0; j < m1; ++j) {
+            int element;
+            input >> element;
+            line.push_back(element);
+        }
+
+        first.push_back(line);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Ввод второй матрицы,label=lst:inputMatrix2]
+void Multiplication::inputMatrix2(std::ifstream& input)
+{
+    input >> n2 >> m2;
+
+    for (int i = 0; i < n2; ++i) {
+        Array line;
+
+        for (int j = 0; j < m2; ++j) {
+            int element;
+            input >> element;
+            line.push_back(element);
+        }
+
+        second.push_back(line);
+    }
+}
+\end{lstlisting}
+
+На листинге \ref{lst:createResult} представлен код для выделения памяти под результат
+и массивы { \ttfamily mulU } и { \ttfamily mulV }.
+
+\begin{lstlisting}[caption=Выделение памяти для результата и дополнительных массивов,label=lst:createResult]
+void Multiplication::createResult()
+{
+    if (m1 != n2) return;
+
+    for (int i = 0; i < n1; ++i) {
+        Array line;
+
+        for (int j = 0; j < m2; ++j) {
+            line.push_back(0);
+        }
+
+        result.push_back(line);
+    }
+
+    for (int i = 0; i < n1; ++i) {
+        mulU.push_back(0);
+    }
+
+    for (int i = 0; i < m2; ++i) {
+        mulV.push_back(0);
+    }
+}
+\end{lstlisting}
+
+На листингах \ref{lst:mulU}, \ref{lst:mulV} представлен код для вычисления
+массивов { \ttfamily mulU } и { \ttfamily mulV }.
+
+\begin{lstlisting}[caption=Подсчет { \ttfamily mulU },label=lst:mulU]
+void Multiplication::calcMulU()
+{
+    for (int i = 0; i < n1; ++i)
+        for (int j = 0; j < n2 - 1; j += 2)
+            mulU[i] -=
+                first[i][j] * first[i][j + 1];
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Подсчет { \ttfamily mulV },label=lst:mulV]
+void Multiplication::calcMulV()
+{
+    for (int j = 0; j < m2; ++j)
+        for (int i = 0; i < n2 - 1; i += 2)
+            mulV[j] -=
+                second[i][j] * second[i + 1][j];
+}
+\end{lstlisting}
+
+На листингах \ref{lst:calculate1}, \ref{lst:calculate2} и \ref{lst:check} вычисляется
+результат.
+
+\begin{lstlisting}[caption=Подсчет первой половины результата,label=lst:calculate1]
+void Multiplication::calculate1()
+{
+    for (int i = 0; i < (n1 >> 1) + 1; ++i) {
+        for (int j = 0; j < m2; ++j) {
+            result[i][j] = mulU[i] + mulV[j];
+            for (int k = 0; k < n2 - 1; k += 2) {
+                result[i][j] +=
+                    (first[i][k] + second[k + 1][j]) *
+                    (first[i][k + 1] + second[k][j]);
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Подсчет второй половины результата,label=lst:calculate2]
+void Multiplication::calculate2()
+{
+    for (int i = (n1 >> 1) + 1; i < n1; ++i) {
+        for (int j = 0; j < m2; ++j) {
+            result[i][j] = mulU[i] + mulV[j];
+            for (int k = 0; k < n2 - 1; k += 2) {
+                result[i][j] +=
+                    (first[i][k] + second[k + 1][j]) *
+                    (first[i][k + 1] + second[k][j]);
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Проверка на нечетность и вычисление если необходимо,label=lst:check]
+void Multiplication::check()
+{
+    if (n2 % 2 == 1)
+        for (int i = 0; i < n1; ++i)
+            for (int j = 0; j < m2; ++j)
+                result[i][j] +=
+                    first[i][n2 - 1] * second[n2 - 1][j];
+}
+\end{lstlisting}
+
+На листингах \ref{lst:pipeline1}, \ref{lst:pipeline2}, \ref{lst:pipeline3} и
+\ref{lst:pipeline4} проводятся конвеерные вычисления умножения матриц.
+
+\begin{lstlisting}[caption=Первый конвейер,label=lst:pipeline1]
+void Conveyor::functionPipeline1()
+{
+    while (true)
+    {
+        std::string buf;
+        input >> buf;
+
+        if (input.eof()) {
+            stopPipline1 = true;
+            return;
+        }
+
+        Multiplication mult;
+        mult.inputMatrix1(input);
+        mult.inputMatrix2(input);
+
+        queuePipeline2.push(mult);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Второй конвейер,label=lst:pipeline2]
+void Conveyor::functionPipeline2()
+{
+    while (true)
+    {
+        if (stopPipline1 &&
+            queuePipeline2.empty()) {
+            stopPipline2 = true;
+            return;
+        }
+
+        if (queuePipeline2.empty()) continue;
+
+        Multiplication mult = queuePipeline2.front();
+        queuePipeline2.pop();
+
+        mult.createResult();
+        mult.calcMulU();
+        mult.calcMulV();
+
+        queuePipeline3.push(mult);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Третий конвейер,label=lst:pipeline3]
+void Conveyor::functionPipeline3()
+{
+    while (true)
+    {
+        if (stopPipline2 &&
+            queuePipeline3.empty()) {
+            stopPipline3 = true;
+            return;
+        }
+
+        if (queuePipeline3.empty()) continue;
+
+        Multiplication mult = queuePipeline3.front();
+        queuePipeline3.pop();
+
+        mult.calculate1();
+
+        queuePipeline4.push(mult);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Четвертый конвейер,label=lst:pipeline4]
+void Conveyor::functionPipeline4()
+{
+    while (true)
+    {
+        if (stopPipline3 &&
+            queuePipeline4.empty()) {
+            return;
+        }
+
+        if (queuePipeline4.empty()) continue;
+
+        Multiplication mult = queuePipeline4.front();
+        queuePipeline4.pop();
+
+        mult.calculate2();
+        mult.check();
+
+        queueResult.push(mult);
+    }
+}
+\end{lstlisting}
+
+\subsection{Тестирование}
+
+Для тестирования программы были заготовлены следующие тесты в таблице
+\ref{table:test}.
+
+\begin{table}[H]
+    \caption{Тесты для алгоритмов}
+    \label{table:test}
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Первая матрца & Вторая матрица & Ожидаемый результат \\
+        \hline
+        1 2 & 1 2 & \ 7 10 \\
+        3 4 & 3 4 & 15 22 \\
+        \hline
+        1 2 3 & 1 2 3 & \ 30\ \ 36\ \ 42 \\
+        4 5 6 & 4 5 6 & \ 66\ \ 81\ \ 96 \\
+        7 8 9 & 7 8 9 & 102 126 150 \\
+        \hline
+        1 2 3 & 1 & 14 \\
+        4 5 6 & 2 & 32 \\
+              & 3 & \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Выводы}
+
+Для исследования конвеерных вычислений был реализован алгоритм на выбранном языке
+{ \ttfamily C++ }. Чтобы проверить правильность работы были подготовлены тесты.

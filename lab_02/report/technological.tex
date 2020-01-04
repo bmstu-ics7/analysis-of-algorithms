@@ -1,0 +1,172 @@
+\newpage
+\section{Технологическая часть}
+
+Необходимо выбрать средства для разработки алгоритмов и подготовить тесты.
+
+\subsection{Требования к программному обеспечению}
+
+Программное обеспечение должно обеспечивать замер процессорного времени выполне- ния каждого алгоритма. Проводятся замеры для случайно генерируемых квадратных матриц
+размерности до 1000.
+
+\subsection{Средства реализации}
+
+В качестве языка программирования был выбран C++.
+Данный язык имеет высокую скорость и богатую стандартную библиотеку,
+содержащую необходимые контейнеры для данной работы. Программа, написанная на C++,
+будет доступна на всех платформах.
+
+Время замерялось с помощью библиотеки chrono, которая измеряет процессорное время \cite{chrono}.
+
+\subsection{Листинг кода}
+
+Результаты разработки указаны на листингах \ref{list:default}, \ref{list:vin},
+\ref{list:modvin}.
+
+\begin{lstlisting}[caption=Стандартный алгоритм умножения матриц,label=list:default]
+Matrix DefaultMultiplication::multiplication(
+    const Matrix& first,
+    const Matrix& second)
+{
+    Matrix result;
+    if (first[0].size() != second.size()) return result;
+    result = CreateMatrix(first.size(), second[0].size(), 0);
+
+    for (int i = 0; i < first.size(); ++i) {
+        for (int j = 0; j < second[0].size(); ++j) {
+            for (int k = 0; k < second.size(); ++k) {
+                result[i][j] = result[i][j] +
+                    first[i][k] * second[k][j];
+            }
+        }
+    }
+
+    return result;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Алгоритм Винограда умножения матриц,label=list:vin]
+Matrix VinogradMultiplication::multiplication(
+    const Matrix& first,
+    const Matrix& second)
+{
+    Matrix result;
+    if (first[0].size() != second.size()) return result;
+    result = CreateMatrix(first.size(), second[0].size(), 0);
+
+    const int m = first.size();
+    const int n = second.size();
+    const int q = second[0].size();
+
+    Array mulU = CreateArray(m);
+    Array mulV = CreateArray(q);
+
+    for (int i = 0; i < m; ++i)
+        for (int j = 0; j < n >> 1; ++j)
+            mulU[i] = mulU[i] +
+                first[i][2 * j] * first[i][2 * j + 1];
+
+    for (int j = 0; j < q; ++j)
+        for (int i = 0; i < n >> 1; ++i)
+            mulV[j] = mulV[j] +
+                second[2 * i][j] * second[2 * i + 1][j];
+
+    for (int i = 0; i < m; ++i) {
+       for (int j = 0; j < q; ++j) {
+            result[i][j] = -mulU[i] - mulV[j];
+            for (int k = 0; k < n >> 1; ++k) {
+                result[i][j] = result[i][j] +
+                    (first[i][2 * k] + second[2 * k + 1][j]) *
+                    (first[i][2 * k + 1] + second[2 * k][j]);
+            }
+        }
+    }
+
+    if (n % 2 == 1)
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < q; ++j)
+                result[i][j] = result[i][j] +
+                    first[i][n - 1] * second[n - 1][j];
+
+    return result;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Оптимизированный алгоритм Винограда умножения матриц,label=list:modvin]
+Matrix ModifiedVinogradMultiplication::multiplication(
+    const Matrix& first,
+    const Matrix& second)
+{
+    Matrix result;
+    if (first[0].size() != second.size()) return result;
+    result = CreateMatrix(first.size(), second[0].size(), 0);
+
+    const int m = first.size();
+    const int n = second.size();
+    const int q = second[0].size();
+
+    Array mulU = CreateArray(m);
+    Array mulV = CreateArray(q);
+
+    for (int i = 0; i < m; ++i)
+        for (int j = 0; j < n - 1; j += 2)
+            mulU[i] -=
+                first[i][j] * first[i][j + 1];
+
+    for (int j = 0; j < q; ++j)
+        for (int i = 0; i < n - 1; i += 2)
+            mulV[j] -=
+                second[i][j] * second[i + 1][j];
+
+    for (int i  0; i < m; ++i) {
+        for (int j = 0; j < q; ++j) {
+            result[i][j] = mulU[i] + mulV[j];
+            for (int k = 0; k < n - 1; k += 2) {
+                result[i][j] +=
+                    (first[i][k] + second[k + 1][j]) *
+                    (first[i][k + 1] + second[k][j]);
+            }
+        }
+    }
+
+    if (n % 2 == 1)
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < q; ++j)
+                result[i][j] +=
+                    first[i][n - 1] * second[n - 1][j];
+
+    return result;
+}
+\end{lstlisting}
+
+\subsection{Тестирование}
+
+Для тестирования программы были заготовлены следующие тесты на таблице
+\ref{table:test}.
+
+\begin{table}[H]
+    \caption{Тесты для алгоритмов}
+    \label{table:test}
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Первая матрца & Вторая матрица & Ожидаемый результат \\
+        \hline
+        1 2 & 1 2 & \ 7 10 \\
+        3 4 & 3 4 & 15 22 \\
+        \hline
+        1 2 3 & 1 2 3 & \ 30\ \ 36\ \ 42 \\
+        4 5 6 & 4 5 6 & \ 66\ \ 81\ \ 96 \\
+        7 8 9 & 7 8 9 & 102 126 150 \\
+        \hline
+        1 2 3 & 1 & 14 \\
+        4 5 6 & 2 & 32 \\
+              & 3 & \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Выводы}
+
+Для сравнения были реализованы 3 алгоритма на выбранном языке
+программирования C++. Чтобы проверить правильность работы алгоритмов
+были подготовлены тесты.
