@@ -1,0 +1,133 @@
+\newpage
+\section{Технологическая часть}
+
+Стоит задача реализовать алгоритмы поиска подстроки в строке.
+
+\subsection{Средства реализации}
+
+В качестве языка программирования был выбран {\ttfamily C++}.
+Данный язык имеет высокую скорость и богатую стандартную библиотеку,
+содержащую необходимые контейнеры для данной работы. Программа, написанная на
+{\ttfamily C++}, будет доступна на всех платформах.
+
+\subsection{Листинг кода}
+
+На листингах \ref{lst:kmp} и \ref{lst:bm} предсавлены алгоритмы
+Кнута-Морриса-Пратта и Бойлера-Мура. На листинге \ref{lst:fail} представлен
+алгоритм создания массива сдвигов для алгоритма Кнута-Морриса-Пратта.
+
+\begin{lstlisting}[caption=Алгоритм Кнута-Морриса-Пратта,label=lst:kmp]
+int KnuthMorrisPratt::find(const std::string& str,
+                           const std::string& substr)
+{
+    if (substr.size() > str.size()) return -1;
+
+    std::vector< int > fail = makeFail(substr);
+
+    int sub = 0;
+    int txt = 0;
+
+    while (txt < int(str.size()) && sub < int(substr.size())) {
+        if (sub == -1 || str[txt] == substr[sub]) {
+            ++txt;
+            ++sub;
+        } else {
+            sub = fail[sub];
+        }
+    }
+
+    if (sub >= substr.size())
+        return txt - substr.size();
+
+    return -1;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Алгоритм создания массива сдвигов,label=lst:fail]
+std::vector< int > KnuthMorrisPratt::makeFail(
+    const std::string& substr
+)
+{
+    std::vector< int > fail(substr.size());
+
+    fail[0] = -1;
+
+    for (int i = 1; i < fail.size(); ++i) {
+        int temp = fail[i - 1];
+
+        while (temp > -1 && substr[temp] != substr[i - 1]) {
+            temp = fail[temp];
+        }
+
+        fail[i] = temp + 1;
+    }
+
+    return fail;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Алгоритм Бойлера-Мура,label=lst:bm]
+int BoilerMyr::find(const std::string& str, const std::string& substr)
+{
+    if (substr.size() > str.size()) return -1;
+
+    std::vector< int > offset;
+
+    for (int i = 0; i <= 255; ++i) {
+        offset.push_back(int(substr.size()));
+    }
+
+    for (int i = 0; i < substr.size() - 1; ++i) {
+        offset[int(substr[i])] = substr.size() - i - 1;
+    }
+
+    int i = int(substr.size()) - 1;
+    int txt = i;
+    int sub = i;
+
+    while (txt > 0 && i < int(str.size())) {
+        txt = int(substr.size()) - 1;
+        sub = i;
+
+        while (txt >= 0 && str[sub] == substr[txt]) {
+            --sub;
+            --txt;
+        }
+
+        i += offset[int(str[i])];
+    }
+
+    if (sub > int(str.size()) - int(substr.size())) return -1;
+
+    return sub + 1;
+}
+\end{lstlisting}
+
+\subsection{Тестирование}
+
+Для тестирования были заготовлены следующие тесты, которые представлены
+на таблице \ref{table:test}.
+
+\begin{table}[H]
+    \caption{Тесты}
+    \label{table:test}
+    \centering
+    \begin{tabular}{|c|c||c|}
+        \hline
+        Строка & Подстрока & Ожидаемый результат \\
+        \hline
+        \hline
+        abababbc & ababbc & 2 \\
+        \hline
+        qwe & qwe & 0 \\
+        \hline
+        asdasd & sa & -1 \\
+        \hline
+        abababa & baba & 1 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Выводы}
+
+Были реализованы алгоритмы поиска подстроки в строке и подготовлены тесты.

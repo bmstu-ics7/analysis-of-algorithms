@@ -1,0 +1,238 @@
+\newpage
+\section{Технологическая часть}
+
+Реализуем необхоимые алгоритмы.
+
+\subsection{Требования к программному обеспечению}
+
+Программное обеспечение должно предоставлять возможность замера процессорного времени выполнения алгоритмов.
+Требуется строить графы для различных данных.
+
+\subsection{Средства реализации}
+
+В качестве языка программирования был выбран {\ttfamily C++}.
+Данный язык имеет высокую скорость и богатую стандартную библиотеку,
+содержащую необходимые контейнеры для данной работы. Программа, написанная на
+{\ttfamily C++}, будет доступна на всех платформах.
+
+\subsection{Листинг кода}
+
+На листингах \ref{lst:fullcall}, \ref{lst:full} и \ref{lst:dist} представлен алгоритм полного рекурсивного
+перебора всех путей.
+
+\begin{lstlisting}[caption=Вызов алгоритма рекурсивного перебора,label=lst:fullcall]
+std::pair< std::vector< size_t >, size_t > FullSearch::way(
+    const Matrix< size_t >& distances)
+{
+    minDist = -1;
+
+    std::vector< size_t > indexes;
+    for (int i = 0; i < distances.size(); ++i)
+        indexes.push_back(i);
+
+    recursive(distances, indexes, 1);
+
+    return std::pair< std::vector< size_t >, size_t >(minWay,
+                                                      minDist);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Алгоритм рекурсивного перебора,label=lst:full]
+void FullSearch::recursive(const Matrix< size_t >& distances,
+                           std::vector< size_t >& indexes,
+                           size_t curIndex)
+{
+    if (curIndex >= indexes.size()) {
+        size_t dist = distance(distances, indexes);
+
+        if (dist < minDist) {
+            minDist = dist;
+            minWay = indexes;
+        }
+
+        return;
+    }
+
+    recursive(distances, indexes, curIndex + 1);
+
+    for (int i = curIndex + 1; i < indexes.size(); ++i) {
+        std::swap(indexes[curIndex], indexes[i]);
+        recursive(distances, indexes, curIndex + 1);
+        std::swap(indexes[curIndex], indexes[i]);
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Подсчет пути,label=lst:dist]
+size_t FullSearch::distance(const Matrix< size_t >& distances,
+                            const std::vector< size_t >& indexes)
+{
+    size_t dist = 0;
+    for (int i = 0; i < indexes.size() - 1; ++i) {
+        dist += distances[indexes[i]][indexes[i + 1]];
+    }
+    dist += distances[indexes[0]][indexes[indexes.size() - 1]];
+    return dist;
+}
+\end{lstlisting}
+
+На листинге \ref{lst:ant} представлен муравьиный алгоритм.
+
+\begin{lstlisting}[caption=Муравьиный алгоритм,label=lst:ant]
+std::pair< std::vector< size_t >, size_t > AntSearch::way(
+    const Matrix< size_t >& distances,
+    double alpha,
+    double beta,
+    double rho,
+    double tmax)
+{
+    srand(time(NULL));
+
+    Matrix< double > pheromone(distances.size(), 0.1);
+
+    size_t minDist = -1;
+    std::vector< size_t > minWay(distances.size());
+
+    for (int time = 0; time < tmax; ++time) {
+        std::vector< int > ants(distances.size());
+        std::vector< std::vector< double > > delta;
+
+        for (int i = 0; i < distances.size(); ++i) {
+            ants[i] = i + 1;
+            delta.push_back(
+                std::vector< double >(distances.size())
+            );
+        }
+
+        for (int ant = 0; ant < ants.size(); ++ant) {
+            int count = 0;
+            std::vector< int > cities(distances.size());
+            std::vector< size_t > way(distances.size());
+
+            cities[ant] = 1;
+            way[0] = ant;
+
+            int len = 0;
+
+            while (count + 1 < distances.size()) {
+                std::vector< double > p(distances.size());
+
+                for (int j = 0; j < distances.size(); ++j) {
+                    if (cities[j] == 0) {
+                        p[j] =
+                            std::pow(
+                                pheromone[way[count]][j],
+                                alpha
+                            ) *
+                            std::pow(
+                                distances[way[count]][j],
+                                beta
+                            );
+
+                        double all = 0;
+
+                        for (int q = 0; q < count; ++q) {
+                            all +=
+                                std::pow(
+                                    pheromone[way[q]][j],
+                                    alpha
+                                ) *
+                                std::pow(
+                                    distances[way[q]][j],
+                                    beta
+                                );
+                        }
+
+                        p[j] /= all;
+                    } else {
+                        p[j] = 0;
+                    }
+                }
+
+                std::vector< int > arr(
+                    distances.size() - count - 1
+                );
+                int cyc = 0;
+
+                for (int i = 0; i < distances.size(); ++i) {
+                    if (cities[i] == 0) {
+                        arr[cyc] = i;
+                        ++cyc;
+                    }
+                }
+
+                int rdm = rand() % (distances.size() - count - 1);
+                len += distances[way[count]][arr[rdm]];
+                ++count;
+                way[count] = arr[rdm];
+                cities[arr[rdm]] = 1;
+            }
+
+            len += distances[way[0]][way[distances.size() - 1]];
+
+            for (int i = 0; i < distances.size() - 1; ++i) {
+                delta[way[i]][way[i + 1]] += minDist / len;
+                delta[way[i + 1]][way[i]] += minDist / len;
+            }
+
+            if (len < minDist) {
+                minDist = len;
+                minWay = way;
+            }
+        }
+
+        for (int i = 0; i < distances.size() - 1; ++i) {
+            for (int j = i + 1; j < distances.size(); ++j) {
+                pheromone[i][j] *= (1 - rho);
+                pheromone[i][j] += delta[i][j];
+            }
+        }
+    }
+
+    return std::pair< std::vector< size_t >, size_t >(minWay,
+                                                      minDist);
+}
+\end{lstlisting}
+
+\subsection{Тестирование}
+
+Для тестирования были заготовлены следующие тесты, которые представлены
+на таблице \ref{table:test}.
+
+\begin{table}[H]
+    \caption{Тесты}
+    \label{table:test}
+    \centering
+    \begin{tabular}{|l||c|}
+        \hline
+        Входной граф & Ожидаемый результат \\
+        \hline
+        \hline
+        \hline
+        4 & \\
+        0 1 2 3 & \\
+        1 0 3 4 & 0 1 2 3 \\
+        2 3 0 5 & dist = 12 \\
+        3 4 5 0 & \\
+        \hline
+        5 & \\
+        0 1 -1 3 4 & \\
+        1 0 3 4 5 & 0 1 3 4 2 \\
+        -1 3 0 5 -1 & dist = 10 \\
+        3 4 5 0 7 & \\
+        4 5 -1 7 0 & \\
+        \hline
+        5 & \\
+        0 5 8 9 2 & \\
+        5 0 3 3 4 & 0 2 1 3 4 \\
+        8 3 0 7 6 & dist = 17 \\
+        9 3 7 0 1 & \\
+        2 4 6 1 0 & \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Выводы}
+
+Разаботаны алгоритмы полного перебора и муравьиный алгоритм, необходимо исследовать муравьиный алгоритм
+с помощью алгоритма перебора, предварительно его протестировав.
