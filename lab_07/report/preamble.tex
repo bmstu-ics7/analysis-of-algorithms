@@ -1,0 +1,41 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{listings}
+
+\usepackage[table]{xcolor}
+
+\usepackage{amsmath}
+\usepackage{MnSymbol}
+\usepackage{wasysym}
+\usepackage{indentfirst}
+\usepackage[unicode, pdftex]{hyperref}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+
+\usepackage{geometry}
+\geometry{left=2cm}
+\geometry{right=1.5cm}
+\geometry{top=1cm}
+\geometry{bottom=2cm}
+
+\usepackage{graphicx}
+\graphicspath{{img/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\usepackage{float}
+
+\newcommand{\anonsection}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+
+% переименовываем  список литературы в "список используемой литературы"
+\addto\captionsrussian{\def\refname{Список используемой литературы}}
+
+\lstset{
+    language=C++,
+    numbers=left,
+    frame=single,
+    texcl=true,
+    basicstyle=\ttfamily
+}
