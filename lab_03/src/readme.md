@@ -14,11 +14,11 @@ $ ./lab_03 <n>
 
 ### Примеры работы
 
-![Пример1](img/zero.png)
+![Пример1](../report/img/zero.png)
 
-![Пример2](img/zero_arg.png)
+![Пример2](../report/img/zero_arg.png)
 
-![Пример3](img/less_zero.png)
+![Пример3](../report/img/less_zero.png)
 
-![Пример4](img/normal.png)
+![Пример4](../report/img/normal.png)
 

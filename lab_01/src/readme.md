@@ -14,10 +14,11 @@ $ ./lab_01 <str1> <str2>
 
 ### Примеры работы
 
-![Пример1](img/good_work.png)
+![Пример1](../report/img/good_work.png)
 
-![Пример2](img/good_space.png)
+![Пример2](../report/img/good_space.png)
 
-![Пример3](img/zero_arg.png)
+![Пример3](../report/img/zero_arg.png)
 
-![Пример4](img/one_arg.png)
+![Пример4](../report/img/one_arg.png)
+

@@ -14,8 +14,8 @@ $ ./lab_07 "str" "substr"
 
 ### Примеры работы
 
-![Пример1](img/zero_arg.png)
+![Пример1](../report/img/zero_arg.png)
 
-![Пример2](img/not_found.png)
+![Пример2](../report/img/not_found.png)
 
-![Пример3](img/good.png)
+![Пример3](../report/img/good.png)

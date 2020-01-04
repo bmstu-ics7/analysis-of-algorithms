@@ -14,11 +14,11 @@ $ ./lab_04 <n> <threads>
 
 ### Примеры работы
 
-![Пример1](img/zero_arg.png)
+![Пример1](../report/img/zero_arg.png)
 
-![Пример2](img/less_zero.png)
+![Пример2](../report/img/less_zero.png)
 
-![Пример3](img/five.png)
+![Пример3](../report/img/five.png)
 
-![Пример4](img/ten.png)
+![Пример4](../report/img/ten.png)
 

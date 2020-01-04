@@ -14,8 +14,8 @@ $ ./lab_05 <file>
 
 ### Примеры работы
 
-![Пример1](img/zero_arg.png)
+![Пример1](../report/img/zero_arg.png)
 
-![Пример2](img/non_exist_file.png)
+![Пример2](../report/img/non_exist_file.png)
 
-![Пример3](img/good.png)
+![Пример3](../report/img/good.png)
