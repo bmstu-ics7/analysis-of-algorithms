@@ -1,0 +1,120 @@
+\newpage
+\section{Технологическая часть}
+
+Необходимо выбрать средства для разработки алгоритмов и подготовить тесты.
+
+\subsection{Требования к программному обеспечению}
+
+Программное обеспечение должно обеспечивать замер процессорного времени выполнения каждого
+алгоритма. Проводятся замеры для случайно генерируемых массивов размерности до 10000.
+
+\subsection{Средства реализации}
+
+В качестве языка программирования был выбран C++. Данный язык имеет высокую скорость и
+богатую стандартную библиотеку, содержащую необходимые контейнеры для данной работы.
+Программа, написанная на C++, будет доступна на всех платформах.
+
+Время замерялось с помощью библиотеки chrono, которая измеряет процессорное
+время \cite{chrono}.
+
+\subsection{Листинг кода}
+
+Результаты разработки указаны на листингах \ref{list:bubble}, \ref{list:shaker},
+\ref{list:qsort}.
+
+\begin{lstlisting}[caption=Сортировка пузырьком,label=list:bubble]
+template < typename Type >
+void BubbleSort< Type >::sort(std::vector< Type >& array,
+                              bool (*comp)(Type, Type))
+{
+    for (int i = 0; i < array.size(); ++i) {
+        for (int j = 0; j < array.size() - i - 1; ++j) {
+            if (comp(array[j], array[j + 1])) {
+                std::swap(array[j], array[j + 1]);
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Сортировка шейкером,label=list:shaker]
+template < typename Type >
+void ShakerSort< Type >::sort(std::vector< Type >& array,
+                              bool (*comp)(Type, Type))
+{
+    int left = 0;
+    int right = array.size() - 1;
+
+    while (left <= right) {
+        for (int i = left; i < right; ++i) {
+            if (comp(array[i], array[i + 1])) {
+                std::swap(array[i], array[i + 1]);
+            }
+        }
+        --right;
+
+        for (int i = right; i > left; --i) {
+            if (comp(array[i - 1], array[i])) {
+                std::swap(array[i - 1], array[i]);
+            }
+        }
+        ++left;
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Быстрая сортировка,label=list:qsort]
+template < typename Type >
+void QSort< Type >::recursive(std::vector< Type >& array,
+                              int start, int finish,
+                              bool (*comp)(Type, Type))
+{
+    if (start < finish) {
+        int left = start, right = finish;
+        Type middle = array[(left + right) >> 1];
+
+         while (left <= right) {
+            while (comp(middle, array[left])) left++;
+            while (comp(array[right], middle)) right--;
+
+            if (left <= right) {
+                std::swap(array[left], array[right]);
+                ++left;
+                --right;
+            }
+        }
+
+        if (start < right) recursive(array, start, right, comp);
+        if (left < finish) recursive(array, left, finish, comp);
+    }
+}
+\end{lstlisting}
+
+\subsection{Тестирование}
+
+Для тестирования программы были заготовлены следующие тесты на таблице \ref{table:test}.
+
+\begin{table}[H]
+    \centering
+    \caption{Тесты для алгоритмов}
+    \label{table:test}
+    \begin{tabular}{|c|c|}
+        \hline
+        Входной массив & Ожидаемый результат \\
+        \hline
+        1, 2, 3, 4, 5, 6, 7, 8, 9 & 1, 2, 3, 4, 5, 6, 7, 8, 9 \\
+        \hline
+        9, 8, 7, 6, 5, 4, 3, 2, 1 & 1, 2, 3, 4, 5, 6, 7, 8, 9 \\
+        \hline
+        4, 2, 7, 4, 8, 2, 4, 8, 1 & 1, 2, 2, 4, 4, 4, 7, 8, 8 \\
+        \hline
+        5, 5, 5, 5, 5, 5, 5, 5, 5 & 5, 5, 5, 5, 5, 5, 5, 5, 5 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Выводы}
+
+Для сравнения были реализованы 3 алгоритма на выбранном языке
+программирования C++. Чтобы проверить правильность работы алгоритмов
+были подготовлены тесты.
